@@ -16,11 +16,42 @@
     <%= javascript_include_tag "turbo", type:"module" %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+
   </head>
 
   <body>
+    <nav class="navbar fixed-top bg-primary" data-bs-theme="dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">eCommerce</a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
+              <li class="nav-item me-3">
+              <a class="nav-link" href="#p">Produtos</a>
+              </li>
+              <li class="nav-item me-3">
+              <a class="nav-link" href="#co">Conta</a>
+              </li>
+              <li class="nav-item me-3">
+              <a class="nav-link" href="#ca">Carrinho</a>
+              </li>
+            </ul>
+            <p class="navbar-text ms-auto">
+            <% if user_signed_in? %>
+              Logged in as <strong><%= current_user.email %></strong>.
+              <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
+              <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link' %>
+            <% else %>
+              <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link' %> |
+              <%= link_to "Login", new_user_session_path, :class => 'navbar-link' %>
+            <% end %>
+          </p>
+        </div>
+    </nav>
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-    <%= yield %>
+
+    <div class="container">
+      <%= yield %>
+    </div>
   </body>
 </html>
