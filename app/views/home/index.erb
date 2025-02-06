@@ -1,11 +1,16 @@
-<h1>Bem vindo ao ecommerce!</h1>
+<h1 class="text-center my-4">Bem vindo ao ecommerce!</h1>
 
-<h2>Products</h2>
-<ul>
+<h2 class="text-center my-4">Products</h2>
+<div class="row">
   <% @products.each do |product| %>
-    <li>
-      <%= link_to product.name, product_path(product) %>
-      - <%= number_to_currency(product.price) %>
-    </li>
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img src="<%= product.image %>" class="card-img-top" alt="<%= product.name %>">
+        <div class="card-body">
+          <h5 class="card-title"><%= link_to product.name, product_path(product) %></h5>
+          <p class="card-text"><%= number_to_currency(product.price) %></p>
+        </div>
+      </div>
+    </div>
   <% end %>
-</ul>
+</div>
