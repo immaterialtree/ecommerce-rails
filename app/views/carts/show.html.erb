@@ -1,0 +1,7 @@
+<h1 class="text-center my-4">Seu Carrinho</h1>
+<ul class="list-group">
+    <% (session[:cart] || []).each do |item| %>
+        <li class="list-group-item"><%= item %></li>
+    <% end %>
+</ul>
+<%= button_to "Pagar", pay_cart_path, method: :post, class: "btn btn-success" %>
