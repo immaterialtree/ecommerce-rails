@@ -21,7 +21,7 @@
   </head>
 
   <body>
-    <nav class="navbar fixed-top bg-primary" data-bs-theme="dark">
+    <nav class="navbar bg-primary mb-3" data-bs-theme="dark">
         <div class="container">
             <a class="navbar-brand" href="/">eCommerce</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
@@ -47,10 +47,18 @@
           </p>
         </div>
     </nav>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% if notice %>
+      <div class="alert alert-success" role="alert">
+      <%= notice %>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="alert alert-danger" role="alert">
+      <%= alert %>
+      </div>
+    <% end %>
 
-    <div class="container">
+    <div class="container mt-3">
       <%= yield %>
     </div>
   </body>
