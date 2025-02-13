@@ -47,6 +47,9 @@ group :development, :test do
   gem 'pry-doc'
   gem 'pry-nav'
   gem 'pry-theme'
+
+  # File watcher for hot reloading
+  gem "listen", "~> 3.7"
 end
 
 group :development do
