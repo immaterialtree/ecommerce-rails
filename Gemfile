@@ -67,3 +67,5 @@ gem 'devise'
 
 gem 'bootstrap', '~> 5.3.3'
 gem 'sassc-rails'
+
+gem 'mercadopago-sdk', '~> 2.3'
