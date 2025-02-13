@@ -49,7 +49,7 @@ group :development, :test do
   gem 'pry-theme'
 
   # File watcher for hot reloading
-  gem "listen", "~> 3.7"
+  # gem "listen", "~> 3.7"
 end
 
 group :development do
