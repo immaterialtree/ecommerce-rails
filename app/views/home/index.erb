@@ -9,7 +9,7 @@
         <img src="<%= product.image %>" class="card-img-top" alt="<%= product.name %>">
         <div class="card-body">
             <h5 class="card-title"><%= link_to product.name, product_path(product) %></h5>
-            <%= button_to 'Adicionar ao carrinho', add_item_cart_path(item: product.id), method: :post, class: "btn btn-primary" %>
+            <%= link_to 'Adicionar ao carrinho', add_item_cart_path(item: product.id), method: :post, class: "btn btn-primary" %>
           <p class="card-text"><%= number_to_currency(product.price) %></p>
         </div>
       </div>
