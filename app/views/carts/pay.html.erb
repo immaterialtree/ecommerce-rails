@@ -1,0 +1,72 @@
+<div id="cardPaymentBrick_container"></div>
+<script>
+  const mp = new MercadoPago('TEST-b127b56a-0e54-4a77-bbcf-111785e6bf92', {
+    locale: 'pt-BR'
+  });
+  const bricksBuilder = mp.bricks();
+  const renderCardPaymentBrick = async (bricksBuilder) => {
+    const settings = {
+      initialization: {
+        amount: <%= @total %>, // valor total a ser pago
+        payer: {
+          email: "<%= current_user ? current_user.email : '' %>",
+        },
+      },
+      customization: {
+        visual: {
+          style: {
+            theme: 'bootstrap', // | 'dark' | 'bootstrap' | 'flat'
+            customVariables: {
+            }
+          }
+        },
+          paymentMethods: {
+            types: {
+              excluded: ['debit_card']
+            }, 
+            maxInstallments: 1,
+          }
+      },
+      callbacks: {
+        onReady: () => {
+          // callback chamado quando o Brick estiver pronto
+        },
+        onSubmit: (cardFormData) => {
+          //  callback chamado o usuário clicar no botão de submissão dos dados
+          //  exemplo de envio dos dados coletados pelo Brick para seu servidor
+          return new Promise((resolve, reject) => {
+            fetch("<%= process_payment_cart_path %>", {
+              method: "POST",
+              headers: {
+              "Content-Type": "application/json",
+              },
+              body: JSON.stringify(cardFormData)
+            })
+              .then((response) => response.json())
+              .then((data) => {
+              console.log(data);
+              alert(data.message);
+                if (data.success) {
+                  window.location.href = "<%= root_path %>";
+                } else {
+                  alert(data.message);
+                  window.location.href = "<%= cart_path %>";
+                }
+                resolve();
+              })
+              .catch((error) => {
+                // lidar com a resposta de erro ao tentar criar o pagamento
+                alert("Erro ao processar pagamento.");
+                reject();
+              })
+          });
+        },
+        onError: (error) => {
+          // callback chamado para todos os casos de erro do Brick
+        },
+      },
+    };
+    window.cardPaymentBrickController = await bricksBuilder.create('cardPayment', 'cardPaymentBrick_container', settings);
+  };
+  renderCardPaymentBrick(bricksBuilder);
+</script>

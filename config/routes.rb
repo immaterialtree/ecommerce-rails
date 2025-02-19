@@ -13,7 +13,8 @@ Rails.application.routes.draw do
 
   resource :cart, only: [:show] do
     post 'add_item', on: :member
-    post 'pay', on: :member
+    get 'pay', on: :member
+    post 'process_payment', on: :member
     delete 'remove_item', on: :member
   end
 

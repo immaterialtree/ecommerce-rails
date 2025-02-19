@@ -1,4 +1,6 @@
 class CartsController < ApplicationController
+  protect_from_forgery except: :process_payment
+
   def show
     @cart = cart_products || []
     @total = @cart.sum(&:price)
@@ -24,26 +26,44 @@ class CartsController < ApplicationController
   def pay
     require 'mercadopago'
 
+    @cart = cart_products || []
+    @total = @cart.sum(&:price)
+    if @cart.empty?
+      redirect_to cart_path, alert: "Seu carrinho está vazio."
+    else
+      render :pay
+    end
+  end
+
+  def process_payment
+    require 'mercadopago'
+
     # Integração com Mercado Pago
-    sdk = Mercadopago::SDK.new('6597116855860817')
+    sdk = Mercadopago::SDK.new('TEST-6597116855860817-021309-046d3a9de12461f3a02bde0bcd24bd60-278204658')
+    
     payment_data = {
-      transaction_amount: @total,
+      transaction_amount: params[:transaction_amount].to_f,
       token: params[:token],
-      description: 'Descrição do pagamento',
-      installments: 1,
-      payment_method_id: 'visa',
+      # description: "Compra de produtos",
+      installments: params[:installments].to_i,
+      payment_method_id: params[:payment_method_id],
       payer: {
-        email: 'payer_email@example.com'
+        email: params[:payer][:email],
+        identification: {
+          type: params[:payer][:identification][:type],
+          number: params[:payer][:identification][:number]
+        },
       }
     }
+
     payment_response = sdk.payment.create(payment_data)
     payment = payment_response[:response]
 
-    if payment[:status] == 'approved'
+    if payment['status'] == 'approved'
       clear_cart
-      redirect_to root_path, notice: "Pagamento realizado com sucesso."
+      render json: { success: true, message: "Pagamento realizado com sucesso." }
     else
-      redirect_to cart_path, alert: "Falha no pagamento: #{payment[:status_detail]}"
+      render json: { success: false, message: "Falha no pagamento: #{payment}" }
     end
   end
 
