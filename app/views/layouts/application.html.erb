@@ -3,7 +3,7 @@
   <head>
     <title><%= content_for(:title) || "App" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -43,7 +43,7 @@
                 <%= link_to 'Edit profile', edit_user_registration_path, :class => 'nav-link' %>
               </li>
               <li class="nav-item me-3">
-                <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'text-white nav-link' %>
+                <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'nav-link' %>
               </li>
               </ul>
             <% else %>
