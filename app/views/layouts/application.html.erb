@@ -15,6 +15,7 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <%= javascript_include_tag "turbo", type:"module" %>
+    <%= javascript_include_tag "application" %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 
@@ -25,21 +26,35 @@
         <div class="container">
             <a class="navbar-brand" href="/">eCommerce</a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
-              <li class="nav-item me-3">
-              <a class="nav-link" href="/products">Produtos</a>
-              </li>
-              <li class="nav-item me-3">
-                <a class="nav-link" href="<%= cart_path %>">Carrinho</a>
+                <li class="nav-item me-3">
+                <%= link_to "Produtos", products_path, class: "nav-link #{'active' if current_page?(products_path)}" %>
+                </li>
+                <li class="nav-item me-3">
+                <%= link_to "Carrinho", cart_path, class: "nav-link #{'active' if current_page?(cart_path)}" %>
               </li>
             </ul>
             <p class="navbar-text ms-auto">
             <% if user_signed_in? %>
-              Logged in as <strong><%= current_user.email %></strong>.
-              <%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %> |
-              <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link' %>
+              <ul class="navbar-nav d-flex flex-row">
+              <li class="nav-item me-3">
+                Logged in as <strong><%= current_user.email %></strong>.
+              </li>
+              <li class="nav-item me-3">
+                <%= link_to 'Edit profile', edit_user_registration_path, :class => 'nav-link' %>
+              </li>
+              <li class="nav-item me-3">
+                <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'text-white nav-link' %>
+              </li>
+              </ul>
             <% else %>
-              <%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link' %> |
-              <%= link_to "Login", new_user_session_path, :class => 'navbar-link' %>
+              <ul class="navbar-nav d-flex flex-row">
+              <li class="nav-item me-3">
+                <%= link_to "Sign up", new_user_registration_path, :class => 'nav-link' %>
+              </li>
+              <li class="nav-item me-3">
+                <%= link_to "Login", new_user_session_path, :class => 'nav-link' %>
+              </li>
+              </ul>
             <% end %>
           </p>
         </div>
