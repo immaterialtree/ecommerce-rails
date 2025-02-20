@@ -77,6 +77,7 @@ class CartsController < ApplicationController
     payment = payment_response[:response]
 
     if payment['status'] == 'approved'
+      create_order
       clear_cart
       render json: { success: true, message: "Pagamento realizado com sucesso." }
     else
@@ -97,7 +98,6 @@ class CartsController < ApplicationController
     existing_products
   end
 
-  private
   def clear_cart
     product_counts = session[:cart] || {}
     products = Product.where(:_id.in => product_counts.keys)
@@ -106,5 +106,17 @@ class CartsController < ApplicationController
       product.update(stock: product.stock - count)
     end
     session[:cart] = {}
+  end
+
+  def create_order
+    order = Order.new(
+      user: current_user,
+      total_price: @total,
+      products: session[:cart].map do |product_id, quantity|
+        product = Product.find(product_id)
+        { product_id: product.id, name: product.name, price: product.price, quantity: quantity }
+      end
+    )
+    order.save!
   end
 end
