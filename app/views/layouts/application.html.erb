@@ -14,7 +14,6 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <%= javascript_include_tag "turbo", type:"module" %>
     <%= javascript_include_tag "application" %>
     <%= javascript_importmap_tags %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
@@ -60,12 +59,12 @@
         </div>
     </nav>
     <% if notice %>
-      <div class="alert alert-success" role="alert">
+      <div class="alert alert-success text-center mx-auto col-8" role="alert">
       <%= notice %>
       </div>
     <% end %>
     <% if alert %>
-      <div class="alert alert-danger" role="alert">
+      <div class="alert alert-danger text-center mx-auto col-8" role="alert">
       <%= alert %>
       </div>
     <% end %>
