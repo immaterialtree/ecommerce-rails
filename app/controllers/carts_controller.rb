@@ -3,7 +3,7 @@ class CartsController < ApplicationController
 
   def show
     @cart = cart_products || []
-    @total = @cart.sum(&:price)
+    @total = calculate_total(@cart)
   end
 
   def add_item
@@ -15,7 +15,7 @@ class CartsController < ApplicationController
     else
       notice = "Item não encontrado."
     end
-    redirect_to root_path, notice: notice
+    redirect_back(fallback_location: root_path, notice: notice)
   end
 
   def remove_item
@@ -44,7 +44,7 @@ class CartsController < ApplicationController
     require 'mercadopago'
 
     @cart = cart_products || []
-    @total = @cart.sum(&:price)
+    @total = calculate_total(@cart)
     if @cart.empty?
       redirect_to cart_path, alert: "Seu carrinho está vazio."
     else
@@ -85,6 +85,11 @@ class CartsController < ApplicationController
   end
 
   private
+
+  def calculate_total(cart)
+    cart.sum { |product| product.price * session[:cart][product.id.to_s].to_i }
+  end
+
   def cart_products
     product_ids = session[:cart].keys || []
     existing_products = Product.where(:_id.in => product_ids)
