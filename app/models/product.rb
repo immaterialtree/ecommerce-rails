@@ -8,4 +8,6 @@ class Product
   field :description, type: String
   field :stock, type: Integer
   field :image, type: String
+
+  index({ name: 'text', description: 'text' })
 end
