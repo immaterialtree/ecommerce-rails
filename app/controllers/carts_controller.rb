@@ -9,9 +9,14 @@ class CartsController < ApplicationController
   def add_item
     session[:cart] ||= {}
     if Product.exists?(params[:item])
-      session[:cart][params[:item]] ||= 0
-      session[:cart][params[:item]] += 1
-      notice = "Item adicionado ao carrinho."
+      product = Product.find(params[:item])
+      if product.stock > session[:cart][params[:item]].to_i
+        session[:cart][params[:item]] ||= 0
+        session[:cart][params[:item]] += 1
+        notice = "Item adicionado ao carrinho."
+      else
+        notice = "Estoque insuficiente para adicionar mais deste item."
+      end
     else
       notice = "Item não encontrado."
     end
@@ -61,7 +66,6 @@ class CartsController < ApplicationController
     payment_data = {
       transaction_amount: params[:transaction_amount].to_f,
       token: params[:token],
-      # description: "Compra de produtos",
       installments: params[:installments].to_i,
       payment_method_id: params[:payment_method_id],
       payer: {
@@ -75,13 +79,13 @@ class CartsController < ApplicationController
 
     payment_response = sdk.payment.create(payment_data)
     payment = payment_response[:response]
-
+    
     if payment['status'] == 'approved'
-      create_order
+      create_order payment_data[:transaction_amount]
       clear_cart
       render json: { success: true, message: "Pagamento realizado com sucesso." }
     else
-      render json: { success: false, message: "Falha no pagamento: #{payment}" }
+      render json: { success: false, message: "Falha no pagamento" }
     end
   end
 
@@ -108,15 +112,14 @@ class CartsController < ApplicationController
     session[:cart] = {}
   end
 
-  def create_order
+  def create_order total_price
     order = Order.new(
       user: current_user,
-      total_price: @total,
+      total_price: total_price,
       products: session[:cart].map do |product_id, quantity|
-        product = Product.find(product_id)
-        { product_id: product.id, name: product.name, price: product.price, quantity: quantity }
+        { product_id: product_id, quantity: quantity }
       end
     )
-    order.save!
-  end
+    success = order.save!
+    end
 end
