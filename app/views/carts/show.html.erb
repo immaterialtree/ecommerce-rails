@@ -29,5 +29,7 @@
 </ul>
 <div class="row my-5">
 <span>Total: R$ <%= @total %></span>
-<%= link_to "Pagar", pay_cart_path, class: "btn btn-success mt-3" %>
+<%= link_to pay_cart_path, class: "btn btn-success mt-3" do %>
+  <i class="bi bi-credit-card"></i> Pagar
+<% end %>
 </div>
