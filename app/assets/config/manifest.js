@@ -3,4 +3,4 @@
 //= link application.js
 //= link bootstrap.js
 //= link @popperjs--core.js
-  //= link turbolinks.js
+  // link turbolinks.js

@@ -70,4 +70,4 @@ gem 'sassc-rails'
 
 gem 'mercadopago-sdk', '~> 2.3'
 
-gem 'turbolinks', '~> 5.2.0'
+gem 'turbolinks', '~> 5.2.0', require: false
