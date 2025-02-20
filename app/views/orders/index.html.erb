@@ -1,0 +1,31 @@
+<h1 class="my-4">Pedidos</h1>
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>ID do Pedido</th>
+      <th>Usuário</th>
+      <th>Preço Total</th>
+      <th>Produtos</th>
+      <th>Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.user.email %></td>
+        <td><%= number_to_currency(order.total_price) %></td>
+        <td>
+          <ul>
+            <% order.products.each do |product| %>
+              <% product_details = Product.find(product['product_id']) %>
+              <li>Produto: <%= product_details.name %>, Quantidade: <%= product['quantity'] %></li>
+            <% end %>
+          </ul>
+        </td>
+        <td><%= order.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

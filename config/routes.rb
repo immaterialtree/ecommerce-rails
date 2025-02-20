@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     delete 'delete_item', on: :member
   end
 
+  resources :orders, only: [:index]
+
   # Defines the root path route ("/")
   root to: "home#index"
 end
