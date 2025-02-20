@@ -69,3 +69,5 @@ gem 'bootstrap', '~> 5.3.3'
 gem 'sassc-rails'
 
 gem 'mercadopago-sdk', '~> 2.3'
+
+gem 'turbolinks', '~> 5.2.0'
