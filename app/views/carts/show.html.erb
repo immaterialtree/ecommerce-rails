@@ -7,7 +7,7 @@
         </li>
     <% end %>
 </ul>
-<div class="row">
-<span class="mt-3">Total: R$ <%= @total %></span>
+<div class="row my-5">
+<span>Total: R$ <%= @total %></span>
 <%= button_to "Pagar", pay_cart_path, method: :post, class: "btn btn-success mt-3" %>
 </div>
