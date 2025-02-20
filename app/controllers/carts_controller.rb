@@ -7,20 +7,37 @@ class CartsController < ApplicationController
   end
 
   def add_item
-    session[:cart] ||= []
+    session[:cart] ||= {}
     if Product.exists?(params[:item])
-    session[:cart] << params[:item]
-        notice = "Item adicionado ao carrinho."
+      session[:cart][params[:item]] ||= 0
+      session[:cart][params[:item]] += 1
+      notice = "Item adicionado ao carrinho."
     else
-        notice = "Item não encontrado."
+      notice = "Item não encontrado."
     end
     redirect_to root_path, notice: notice
   end
 
   def remove_item
-    session[:cart] ||= []
-    session[:cart].delete(params[:item])
-    redirect_to cart_path, notice: "Item removido do carrinho."
+    session[:cart] ||= {}
+    if session[:cart][params[:item]].to_i > 0
+      session[:cart][params[:item]] -= 1
+      session[:cart].delete(params[:item]) if session[:cart][params[:item]] <= 0
+      notice = "Item removido do carrinho."
+    else
+      notice = "Item não encontrado no carrinho."
+    end
+    redirect_to cart_path, notice: notice
+  end
+
+  def delete_item
+    session[:cart] ||= {}
+    if session[:cart].delete(params[:item])
+      notice = "Todos os itens do tipo foram removidos do carrinho."
+    else
+      notice = "Item não encontrado no carrinho."
+    end
+    redirect_to cart_path, notice: notice
   end
 
   def pay
@@ -69,21 +86,20 @@ class CartsController < ApplicationController
 
   private
   def cart_products
-    product_ids = session[:cart] || []
+    product_ids = session[:cart].keys || []
     existing_products = Product.where(:_id.in => product_ids)
-    session[:cart] = existing_products.pluck(:id).map(&:to_s) # atualiza a sessão com apenas os produtos existentes
+    session[:cart].slice!(*existing_products.pluck(:id).map(&:to_s)) # atualiza a sessão com apenas os produtos existentes
     existing_products
   end
 
   private
   def clear_cart
-    product_counts = (session[:cart] || []).each_with_object(Hash.new(0)) do |prod_id, counts|
-      counts[prod_id.to_s] += 1
-    end
+    product_counts = session[:cart] || {}
     products = Product.where(:_id.in => product_counts.keys)
     products.each do |product|
       count = product_counts[product.id.to_s] || 0
       product.update(stock: product.stock - count)
     end
+    session[:cart] = {}
   end
 end

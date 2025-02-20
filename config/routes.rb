@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     get 'pay', on: :member
     post 'process_payment', on: :member
     delete 'remove_item', on: :member
+    delete 'delete_item', on: :member
   end
 
   # Defines the root path route ("/")
